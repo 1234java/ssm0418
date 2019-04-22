@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zkin.ssm.mapper.BookMapper" >
+
+    <cache type="com.zkin.ssm.redis.RedisCache" />
+
+  <resultMap id="BaseResultMap" type="com.zkin.ssm.model.Book" >
+    <constructor >
+      <idArg column="rm" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="price" jdbcType="REAL" javaType="java.lang.Float" />
+      <arg column="type" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="author" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+
+
+  <resultMap id="book" type="com.zkin.ssm.model.Book" >
+      <id column="rm" property="rm" javaType="java.lang.Integer" />
+      <result column="code" property="code" javaType="java.lang.String" />
+      <result column="name" property="name" javaType="java.lang.String" />
+      <result column="price" property="price" javaType="java.lang.Float" />
+      <result column="type" property="type" javaType="java.lang.String" />
+      <result column="author" property="author" javaType="java.lang.String" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    rm, code, name, price, type, author
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_book
+    where rm = #{rm,jdbcType=INTEGER}
+  </select>
+  <select id="list" resultMap="book" parameterType="com.zkin.ssm.model.Book">
+    select *
+    from t_book
+    where 1=1
+  </select>
+
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_book
+    where rm = #{rm,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zkin.ssm.model.Book" >
+    insert into t_book (code, name,
+      price, type, author)
+    values ( #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{price,jdbcType=REAL}, #{type,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zkin.ssm.model.Book" >
+    insert into t_book
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="rm != null" >
+        rm,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="author != null" >
+        author,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="rm != null" >
+        #{rm,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=REAL},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zkin.ssm.model.Book" >
+    update t_book
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=REAL},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where rm = #{rm,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zkin.ssm.model.Book" >
+    update t_book
+    set code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=REAL},
+      type = #{type,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR}
+    where rm = #{rm,jdbcType=INTEGER}
+  </update>
+</mapper>

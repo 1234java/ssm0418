@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zkin.ssm.mapper.NewsMapper" >
+  <resultMap id="BaseResultMap" type="com.zkin.ssm.model.News" >
+    <constructor >
+      <idArg column="news_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="title" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    news_id, title
+  </sql>
+  <resultMap id="selectMap" type="com.zkin.ssm.model.News" >
+      <id column="news_id" property="newsId" javaType="java.lang.Integer" />
+      <result column="title" property="title" javaType="java.lang.String" />
+    <collection property="categories" ofType="com.zkin.ssm.model.Category" >
+      <id column="category_id" property="categoryId" javaType="java.lang.Integer" />
+      <result column="category_name" property="categoryName" javaType="java.lang.String" />
+
+    </collection>
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="selectMap" parameterType="java.lang.Integer" >
+    SELECT s.*,c.*
+    FROM t_news s JOIN t_news_category n on s.news_id=n.nid JOIN t_category c on n.cid=c.category_id
+    WHERE  s.news_id=#{newsId,jdbcType=INTEGER}
+    <!-- select
+    <include refid="Base_Column_List" />
+    from t_news
+    where news_id = #{newsId,jdbcType=INTEGER}-->
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_news
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zkin.ssm.model.News" >
+    insert into t_news (news_id, title)
+    values (#{newsId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zkin.ssm.model.News" >
+    insert into t_news
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="newsId != null" >
+        news_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="newsId != null" >
+        #{newsId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zkin.ssm.model.News" >
+    update t_news
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zkin.ssm.model.News" >
+    update t_news
+    set title = #{title,jdbcType=VARCHAR}
+    where news_id = #{newsId,jdbcType=INTEGER}
+  </update>
+</mapper>
